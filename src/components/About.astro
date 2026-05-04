@@ -1,0 +1,43 @@
+---
+const stats = [
+  { number: '10+',        label: 'Years Experience' },
+  { number: 'MSc & BSc', label: 'Degrees'           },
+  { number: '4',          label: 'Languages'         },
+  { number: 'Edinburgh',  label: 'Based in'          },
+];
+---
+
+<section id="about" class="py-28 px-8 flex items-center justify-center">
+  <div class="max-w-5xl w-full mx-auto">
+    <h2 class="font-heading text-4xl font-bold text-center text-accent mb-14">About Me</h2>
+
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+      <div class="space-y-5 text-[1.05rem] leading-relaxed opacity-90">
+        <p>
+          Business Analyst with strong business acumen and effective stakeholder engagement,
+          ensuring project deliverables match client specification.
+        </p>
+        <p>
+          More than ten years of background in all facets of business process analysis,
+          information systems analysis, requirements gathering, and specification design.
+          Analytical and skilled in successfully navigating the project environment with
+          a focus on quality business deliverables.
+        </p>
+        <p>
+          Collaborative communicator with all members of the organisation to improve
+          procedures, enhance productivity, and develop plans, while satisfying the needs
+          of the operations and its customers.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-5">
+        {stats.map(stat => (
+          <div class="bg-white/5 p-8 rounded-2xl text-center border border-white/10 transition-all duration-300 hover:-translate-y-1 hover:bg-white/10">
+            <span class="block text-3xl font-bold text-accent mb-2">{stat.number}</span>
+            <span class="text-sm opacity-70">{stat.label}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

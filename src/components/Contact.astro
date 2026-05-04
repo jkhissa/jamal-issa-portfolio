@@ -1,0 +1,36 @@
+---
+const links = [
+  { href: 'mailto:jkhissa@gmail.com', icon: '✉️', label: 'jkhissa@gmail.com', external: false },
+  { href: 'https://www.linkedin.com/in/jissa90', icon: '🔗', label: 'LinkedIn', external: true },
+  { href: 'https://github.com/jkhissa', icon: '💻', label: 'GitHub', external: true },
+];
+---
+
+<section id="contact" class="py-28 px-8 flex items-center justify-center">
+  <div class="max-w-5xl w-full mx-auto">
+    <h2 class="font-heading text-4xl font-bold text-center text-accent mb-14">Get in Touch</h2>
+
+    <div class="bg-white/5 p-12 rounded-3xl text-center max-w-xl mx-auto border border-white/10">
+      <p class="text-lg mb-8 opacity-80">
+        Feel free to reach out for collaborations or opportunities.
+      </p>
+
+      <div class="flex flex-col gap-4">
+        {links.map(link => (
+          <a
+            href={link.href}
+            target={link.external ? '_blank' : undefined}
+            rel={link.external ? 'noopener noreferrer' : undefined}
+            class="flex items-center gap-4 text-[#e0e0e0] no-underline text-lg px-8 py-4 bg-white/5 rounded-xl justify-center transition-all duration-300 hover:bg-white/10 hover:text-accent"
+          >
+            <span>{link.icon}</span> {link.label}
+          </a>
+        ))}
+
+        <div class="flex items-center gap-3 justify-center opacity-60 mt-2">
+          <span>📍</span> Edinburgh, UK
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

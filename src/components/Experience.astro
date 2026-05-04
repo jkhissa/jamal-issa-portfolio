@@ -1,0 +1,94 @@
+---
+const jobs = [
+  {
+    company: 'condatis',
+    date: 'Mar 2025 – Present',
+    title: 'Senior Technical Business Analyst',
+    companyName: 'Condatis',
+    location: 'Edinburgh, Scotland, United Kingdom',
+    bullets: [
+      'Lead the analysis of complex identity and access management (IAM) solutions.',
+      'Collaborate with stakeholders to define system architectures, workflows, and integration requirements.',
+      'Conduct in-depth gap analyses to identify inefficiencies, risks, and optimisation opportunities.',
+      'Document detailed functional and non-functional requirements, including API specifications.',
+    ],
+  },
+  {
+    company: 'condatis',
+    date: 'May 2023 – Mar 2025',
+    title: 'Business Analyst',
+    companyName: 'Condatis',
+    location: 'Edinburgh, Scotland, United Kingdom',
+    bullets: [
+      'Work closely with stakeholders to analyse business models, workflows, and product features.',
+      'Document functional and non-functional requirements using process flows, user stories, and acceptance criteria.',
+      'Elicit and refine business requirements from internal teams, customers, and partners.',
+    ],
+  },
+  {
+    company: 'avaloq',
+    date: 'Jul 2022 – Apr 2023',
+    title: 'Senior Business Analyst',
+    companyName: 'Avaloq',
+    location: 'Edinburgh, Scotland, United Kingdom',
+    bullets: [
+      'Led defect analysis to identify root causes and drive resolution.',
+      'Facilitated requirement gathering sessions, collaborating with stakeholders.',
+      'Conducted customer workshops, translating complex requirements into actionable deliverables.',
+    ],
+  },
+  {
+    company: 'avaloq',
+    date: 'Jan 2020 – Jul 2022',
+    title: 'Business Analyst',
+    companyName: 'Avaloq',
+    location: 'Edinburgh, United Kingdom',
+    bullets: [],
+  },
+  {
+    company: 'avaloq',
+    date: 'Dec 2018 – Jan 2020',
+    title: 'Technical Business Analyst',
+    companyName: 'Avaloq',
+    location: 'Edinburgh, United Kingdom',
+    bullets: [
+      'Joined Avaloq Innovation as part of lending and credit team.',
+      'Supporting the core functionality of the product and providing third-level support.',
+      'Involved in requirements gathering and specifications design.',
+    ],
+  },
+];
+---
+
+<section id="experience" class="py-28 px-8 flex items-center justify-center">
+  <div class="max-w-5xl w-full mx-auto">
+    <h2 class="font-heading text-4xl font-bold text-center text-accent mb-14">Experience</h2>
+
+    <div class="relative max-w-3xl mx-auto">
+      <!-- Vertical line -->
+      <div class="absolute left-12 top-0 bottom-0 w-px bg-white/10"></div>
+
+      {jobs.map(job => (
+        <div class="timeline-item relative pl-24 mb-10" data-company={job.company}>
+          <!-- Dot -->
+          <div class="absolute left-[44px] top-1 w-3.5 h-3.5 rounded-full bg-accent border-[3px] border-[#0a0a0a]"></div>
+
+          <p class="text-sm text-accent mb-2">{job.date}</p>
+
+          <div class="timeline-content bg-white/5 p-7 rounded-2xl border border-white/5 transition-all duration-300 hover:translate-x-2 hover:bg-white/[0.08]">
+            <h3 class="text-lg font-semibold mb-0.5">{job.title}</h3>
+            <h4 class="font-normal opacity-75 mb-0.5 text-sm">{job.companyName}</h4>
+            <p class="text-xs opacity-50 mb-3">{job.location}</p>
+            {job.bullets.length > 0 && (
+              <ul class="list-disc list-inside space-y-1.5 mt-3">
+                {job.bullets.map(bullet => (
+                  <li class="text-sm opacity-85">{bullet}</li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

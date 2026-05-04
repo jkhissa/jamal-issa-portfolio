@@ -1,0 +1,86 @@
+---
+---
+
+<nav
+  class="fixed top-0 w-full z-50 px-8 py-4 flex justify-between items-center backdrop-blur-md border-b border-white/10"
+  style="background: rgba(10,10,10,0.85);"
+>
+  <div class="font-heading font-bold text-2xl text-accent">JI</div>
+
+  <!-- Desktop links -->
+  <ul class="hidden md:flex gap-8 list-none m-0 p-0">
+    {['About', 'Experience', 'Skills', 'Contact'].map(label => (
+      <li>
+        <a
+          href={`#${label.toLowerCase()}`}
+          class="text-[#e0e0e0] no-underline font-medium transition-colors duration-300 hover:text-accent"
+        >
+          {label}
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <!-- Mobile hamburger -->
+  <button
+    id="menu-toggle"
+    class="md:hidden flex flex-col gap-1.5 cursor-pointer bg-transparent border-0 p-1"
+    aria-label="Toggle menu"
+  >
+    <span id="bar1" class="block w-6 h-0.5 bg-[#e0e0e0] transition-all duration-300"></span>
+    <span id="bar2" class="block w-6 h-0.5 bg-[#e0e0e0] transition-all duration-300"></span>
+    <span id="bar3" class="block w-6 h-0.5 bg-[#e0e0e0] transition-all duration-300"></span>
+  </button>
+</nav>
+
+<!-- Mobile overlay -->
+<div
+  id="mobile-menu"
+  class="fixed inset-0 z-40 hidden flex-col items-center justify-center"
+  style="background: rgba(10,10,10,0.97);"
+>
+  <ul class="flex flex-col gap-10 text-2xl list-none text-center m-0 p-0">
+    {['About', 'Experience', 'Skills', 'Contact'].map(label => (
+      <li>
+        <a
+          href={`#${label.toLowerCase()}`}
+          class="mobile-link text-[#e0e0e0] no-underline font-medium hover:text-accent transition-colors"
+        >
+          {label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</div>
+
+<script>
+  const toggle = document.getElementById('menu-toggle')!;
+  const menu   = document.getElementById('mobile-menu')!;
+  const bar1   = document.getElementById('bar1')!;
+  const bar2   = document.getElementById('bar2')!;
+  const bar3   = document.getElementById('bar3')!;
+
+  function openMenu() {
+    menu.classList.remove('hidden');
+    menu.classList.add('flex');
+    bar1.style.transform = 'translateY(8px) rotate(45deg)';
+    bar2.style.opacity = '0';
+    bar3.style.transform = 'translateY(-8px) rotate(-45deg)';
+  }
+
+  function closeMenu() {
+    menu.classList.add('hidden');
+    menu.classList.remove('flex');
+    bar1.style.transform = '';
+    bar2.style.opacity = '';
+    bar3.style.transform = '';
+  }
+
+  toggle.addEventListener('click', () => {
+    menu.classList.contains('hidden') ? openMenu() : closeMenu();
+  });
+
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+</script>

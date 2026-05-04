@@ -1,0 +1,53 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ParallaxBg from '../components/ParallaxBg.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Experience from '../components/Experience.astro';
+import Skills from '../components/Skills.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout>
+  <ParallaxBg />
+  <Nav />
+  <main>
+    <Hero />
+    <About />
+    <Experience />
+    <Skills />
+    <Contact />
+  </main>
+  <Footer />
+</Layout>
+
+<script>
+  // Smooth scrolling
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const href = this.getAttribute('href');
+      if (href) document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // Scroll fade-in
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1 },
+  );
+
+  document.querySelectorAll('section').forEach(section => {
+    section.classList.add('fade-in-section');
+    observer.observe(section);
+  });
+</script>
