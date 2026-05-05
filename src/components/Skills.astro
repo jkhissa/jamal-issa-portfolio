@@ -13,7 +13,7 @@ const categories = [
     tags: [
       'Microsoft Office', 'Visio', 'Creatly', 'UXPin',
       'SAP PowerDesigner', 'HTML5', 'CSS3', 'JavaScript',
-      'Azure Fundamentals',
+      'MS Entra Suite',
     ],
   },
   {
@@ -23,6 +23,16 @@ const categories = [
       'Russian (Native)', 'French (Elementary)',
     ],
   },
+  {
+    name: 'Certifications',
+    tags: [
+      'Professional Scrum Master™ I (PSM I)',
+      'Microsoft Certified: Azure Fundamentals',
+      'Avaloq Certified Customisation Professional (ACCP)',
+      'Learn Git — Boot.dev',
+      'Learn Linux — Boot.dev',
+    ],
+  },
 ];
 ---
 
@@ -30,7 +40,7 @@ const categories = [
   <div class="max-w-5xl w-full mx-auto">
     <h2 class="font-heading text-4xl font-bold text-center text-accent mb-14">Skills & Certifications</h2>
 
-    <div class="grid md:grid-cols-3 gap-6">
+    <div class="grid md:grid-cols-2 gap-6">
       {categories.map(cat => (
         <div class="bg-white/5 p-8 rounded-2xl border border-white/5">
           <h3 class="text-accent font-semibold mb-6 text-lg">{cat.name}</h3>

@@ -8,7 +8,7 @@ interface Props {
 
 const {
   title = 'Jamal Issa | Senior Technical Business Analyst',
-  description = 'Portfolio of Jamal Issa — Senior Technical Business Analyst specialising in IAM, MS Entra Suite, and Avaloq Core.',
+  description = 'Jamal Issa is a Senior Technical Business Analyst specialising in Identity & Access Management, fintech systems, and Agile delivery — with an international career spanning Syria, Russia, Scotland, and Slovakia.',
 } = Astro.props;
 ---
 
@@ -18,6 +18,11 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <meta name="author" content="Jamal Issa" />
+    <meta name="keywords" content="Jamal Issa, Business Analyst, Technical Business Analyst, Identity Access Management, IAM, MS Entra Suite, Avaloq, Agile, fintech, Edinburgh, Slovakia" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
