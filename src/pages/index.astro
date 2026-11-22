@@ -3,12 +3,12 @@ import Base from '../layouts/Base.astro';
 import GlassBackground from '../components/GlassBackground.astro';
 import Ticker from '../components/Ticker.astro';
 import NowList from '../components/NowList.astro';
-import { now, byActivity } from '../data/now';
+import { getNow } from '../lib/now';
 import { headline, employer, platforms, certifications, languages, links } from '../data/profile';
 import { getPosts, readingMinutes, formatDate } from '../lib/posts';
 
 const posts = (await getPosts()).slice(0, 3);
-const nowItems = [...now].sort(byActivity).slice(0, 4);
+const nowItems = await getNow();
 ---
 
 <Base surface="dark" active="home">
@@ -24,7 +24,7 @@ const nowItems = [...now].sort(byActivity).slice(0, 4);
     <a class="t now glass solid" href="/now/">
       <span class="label">Now</span><span class="go" aria-hidden="true">↗</span>
       <h2 class="tt">What I'm working on</h2>
-      <NowList items={nowItems} />
+      <NowList items={nowItems} limit={4} empty="Nothing public on the board right now." />
     </a>
 
     <div class="t stat glass"><span class="label">Experience</span><div class="n">14<b>+</b></div><span class="d">years in business &amp; technical analysis</span></div>

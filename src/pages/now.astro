@@ -1,30 +1,29 @@
 ---
 import Base from '../layouts/Base.astro';
 import NowList from '../components/NowList.astro';
-import { now, byActivity } from '../data/now';
-import { formatDate } from '../lib/posts';
+import { latestUpdate, selectNow } from '../data/now';
+import { getNow } from '../lib/now';
+import { formatNowDate } from '../lib/now-render';
 
-const active = now.filter(i => i.state !== 'done').sort(byActivity);
-const done = now.filter(i => i.state === 'done');
-const lastUpdated = now.map(i => i.updated).sort().at(-1);
+const items = await getNow();
+const hasDone = selectNow(items, 'done').length > 0;
+const lastUpdated = latestUpdate(items);
 ---
 
 <Base title="Now" description="What Jamal Issa is working on right now." active="now">
   <div class="page-top"><div class="wrap grid">
-    <div class="kicker label">Now{lastUpdated && ` · updated ${formatDate(new Date(lastUpdated))}`}</div>
+    <div class="kicker label">Now<span data-now-updated>{lastUpdated ? ` · updated ${formatNowDate(lastUpdated)}` : ''}</span></div>
     <h1 class="display">What I'm working on<span class="dot">.</span></h1>
     <p class="standfirst">Current projects outside the day job, from backlog to done. Each bar shows how far along the project is.</p>
   </div></div>
 
   <section class="section" aria-labelledby="in-progress"><div class="wrap grid">
     <div class="section-label"><span class="num">01</span><h2 id="in-progress">On the go</h2></div>
-    <div class="section-body"><NowList items={active} detailed /></div>
+    <div class="section-body"><NowList items={items} filter="active" detailed empty="Nothing on the go right now." /></div>
   </div></section>
 
-  {done.length > 0 && (
-    <section class="section" aria-labelledby="done"><div class="wrap grid">
+  <section class="section" aria-labelledby="done" data-now-hide-empty hidden={!hasDone}><div class="wrap grid">
       <div class="section-label"><span class="num">02</span><h2 id="done">Recently done</h2></div>
-      <div class="section-body"><NowList items={done} detailed /></div>
+      <div class="section-body"><NowList items={items} filter="done" limit={6} detailed /></div>
     </div></section>
-  )}
 </Base>

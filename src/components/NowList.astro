@@ -1,52 +1,69 @@
 ---
-import { STATE_LABELS, type NowItem } from '../data/now';
-import { formatDate } from '../lib/posts';
+import { selectNow, type NowFilter, type NowItem } from '../data/now';
+import { renderNowItems } from '../lib/now-render';
 
 interface Props {
   items: NowItem[];
+  filter?: NowFilter;
+  limit?: number;
   detailed?: boolean; // /now page: bigger, with progress and date
+  empty?: string; // shown when nothing matches
 }
-const { items, detailed = false } = Astro.props;
+const { items, filter = 'all', limit, detailed = false, empty = '' } = Astro.props;
 ---
 
-<ul class:list={['now-list', { detailed }]}>
-  {items.map(item => (
-    <li>
-      <div class="row">
-        <span class="title">{item.title}</span>
-        <span class="stage" style={`--c: var(--st-${item.state})`}>{STATE_LABELS[item.state]}</span>
-      </div>
-      {item.progress !== null && (
-        <div class="bar" role="progressbar" aria-label={`${item.title} progress`}
-             aria-valuenow={item.progress} aria-valuemin="0" aria-valuemax="100">
-          <i style={`width: ${item.progress}%; --c: var(--st-${item.state})`}></i>
-        </div>
-      )}
-      {detailed && (
-        <div class="meta">
-          <span class="label">{item.progress !== null ? `${item.progress}% · ` : ''}updated {formatDate(new Date(item.updated))}</span>
-        </div>
-      )}
-    </li>
-  ))}
-</ul>
+<ul class:list={['now-list', { detailed }]} data-now-list data-filter={filter} data-limit={limit}
+    data-detailed={detailed ? '1' : undefined} data-empty={empty}
+    set:html={renderNowItems(selectNow(items, filter, limit), detailed, empty)} />
 
-<style>
+<script>
+  // Refresh every Now list on the page from the board's live feed.
+  import { latestUpdate, parseNow, selectNow, type NowFilter } from '../data/now';
+  import { formatNowDate, renderNowItems } from '../lib/now-render';
+
+  async function refresh() {
+    const lists = document.querySelectorAll<HTMLElement>('[data-now-list]');
+    if (!lists.length) return;
+    try {
+      const res = await fetch('/now.json', { cache: 'no-store' });
+      if (!res.ok) return; // e.g. local dev: keep what was built
+      const items = parseNow(await res.json());
+      if (!items) return;
+      for (const el of lists) {
+        const { filter = 'all', limit, detailed, empty = '' } = el.dataset;
+        el.innerHTML = renderNowItems(selectNow(items, filter as NowFilter, limit ? Number(limit) : undefined), Boolean(detailed), empty);
+      }
+      for (const section of document.querySelectorAll<HTMLElement>('[data-now-hide-empty]')) {
+        section.hidden = !section.querySelector('[data-now-list] li:not(.now-empty)');
+      }
+      const updated = document.querySelector('[data-now-updated]');
+      const latest = latestUpdate(items);
+      if (updated) updated.textContent = latest ? ` · updated ${formatNowDate(latest)}` : '';
+    } catch {
+      /* offline or blocked: keep the built list */
+    }
+  }
+  refresh();
+</script>
+
+<style is:global>
+  /* Global (not scoped) because the list is re-rendered in the browser */
   .now-list { list-style: none; margin: 0; padding: 0; }
-  li { padding: 11px 0; border-top: 1px solid var(--track); }
-  li:first-child { border-top: 0; }
-  .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
-  .title { font-weight: 500; font-size: 15.5px; }
-  .stage {
+  .now-list li { padding: 11px 0; border-top: 1px solid var(--track); }
+  .now-list li:first-child { border-top: 0; }
+  .now-list .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .now-list .title { font-weight: 500; font-size: 15.5px; }
+  .now-list .stage {
     font: 500 11.5px var(--font-mono); padding: 3px 9px; border-radius: 99px; white-space: nowrap;
     color: var(--c); border: 1px solid currentColor;
   }
-  .bar { height: 6px; background: var(--track); border-radius: 99px; overflow: hidden; }
-  .bar i { display: block; height: 100%; border-radius: 99px; background: var(--c); }
+  .now-list .bar { height: 6px; background: var(--track); border-radius: 99px; overflow: hidden; }
+  .now-list .bar i { display: block; height: 100%; border-radius: 99px; background: var(--c); }
+  .now-list .now-empty { color: var(--text-2); }
 
-  .detailed li { padding: 22px 0; border-top-color: var(--hair); }
-  .detailed li:first-child { border-top: 2px solid var(--rule); }
-  .detailed .title { font: 700 22px/1.25 var(--font-display); letter-spacing: -.02em; }
-  .detailed .bar { height: 8px; }
-  .meta { margin-top: 10px; }
+  .now-list.detailed li { padding: 22px 0; border-top-color: var(--hair); }
+  .now-list.detailed li:first-child { border-top: 2px solid var(--rule); }
+  .now-list.detailed .title { font: 700 22px/1.25 var(--font-display); letter-spacing: -.02em; }
+  .now-list.detailed .bar { height: 8px; }
+  .now-list .meta { margin-top: 10px; }
 </style>
