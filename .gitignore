@@ -7,3 +7,6 @@ dist
 # Personal CV files (contain contact details; not needed for the build)
 *.pdf
 cv_content.txt
+
+# Article drafts: local only, never committed (repo is public)
+src/content/writing/drafts/

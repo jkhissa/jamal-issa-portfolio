@@ -16,13 +16,13 @@ interface Props {
 
 const {
   title,
-  description = 'Jamal Issa is a Senior Technical Business Analyst specialising in Identity & Access Management on Microsoft\'s identity platform — Azure AD B2C, Entra External ID and Entra ID Governance, OAuth 2.0 / OIDC — based in Edinburgh.',
+  description = 'Jamal Issa is a Senior Technical Business Analyst specialising in Identity & Access Management on Microsoft\'s identity platform (Azure AD B2C, Entra External ID, Entra ID Governance, OAuth 2.0 / OIDC), based in Edinburgh.',
   surface = 'light',
   active,
   type = 'website',
 } = Astro.props;
 
-const fullTitle = title ? `${title} — Jamal Issa` : 'Jamal Issa | Senior Technical Business Analyst';
+const fullTitle = title ? `${title} | Jamal Issa` : 'Jamal Issa | Senior Technical Business Analyst';
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
@@ -42,7 +42,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <meta name="theme-color" content={surface === 'dark' ? '#0b0c10' : '#fbfaf7'} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="alternate" type="application/rss+xml" title="Jamal Issa — Writing" href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Jamal Issa | Writing" href="/rss.xml" />
     {surface === 'light' && (
       <script is:inline>
         // Apply the reader's saved theme before first paint (no flash).

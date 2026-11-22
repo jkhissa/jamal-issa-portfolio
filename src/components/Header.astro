@@ -15,7 +15,7 @@ const items = [
 
 <header class="site-header">
   <div class="bar">
-    <a class="logo" href="/" aria-label="Jamal Issa — home">Jamal Issa<b>.</b></a>
+    <a class="logo" href="/" aria-label="Jamal Issa, home">Jamal Issa<b>.</b></a>
     <nav aria-label="Main">
       {items.map(item => (
         <a href={item.href} class:list={{ on: active === item.key }} aria-current={active === item.key ? 'page' : undefined}>

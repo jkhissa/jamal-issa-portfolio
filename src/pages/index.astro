@@ -54,7 +54,7 @@ const nowItems = [...now].sort((a, b) => stageOrder.indexOf(a.stage) - stageOrde
     </a>
     <div class="t col glass"><span class="label">Based in</span><div><div class="word">Edinburgh</div><span class="sub mono">Scotland, UK</span></div></div>
 
-    <div class="t col glass"><span class="label">Languages · 3 countries</span><div class="langs">{languages.map(l => <span title={`${l.name} — ${l.level}`}>{l.code}</span>)}</div></div>
+    <div class="t col glass"><span class="label">Languages · 3 countries</span><div class="langs">{languages.map(l => <span title={`${l.name}: ${l.level}`}>{l.code}</span>)}</div></div>
     <a class="t col glass" href="/profile/"><span class="label">Previously</span><div><div class="word">Avaloq</div><span class="sub">4 yrs · core banking lending</span></div></a>
 
     <div class="ticker-wrap glass"><Ticker items={platforms} /></div>

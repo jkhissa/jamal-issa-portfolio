@@ -5,7 +5,7 @@ import { getPosts } from '../lib/posts';
 export async function GET(context: APIContext) {
   const posts = await getPosts();
   return rss({
-    title: 'Jamal Issa — Writing',
+    title: 'Jamal Issa | Writing',
     description: 'Articles on identity and access management, business analysis and homelab projects.',
     site: context.site!,
     items: posts.map(post => ({
