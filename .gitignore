@@ -3,3 +3,7 @@ dist
 .astro
 .DS_Store
 .env
+
+# Personal CV files (contain contact details; not needed for the build)
+*.pdf
+cv_content.txt
