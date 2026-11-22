@@ -1,22 +1,23 @@
 ---
 import Base from '../layouts/Base.astro';
 import NowList from '../components/NowList.astro';
-import { now, stageOrder } from '../data/now';
+import { now, byActivity } from '../data/now';
+import { formatDate } from '../lib/posts';
 
-const active = now.filter(i => i.stage !== 'done').sort((a, b) => stageOrder.indexOf(a.stage) - stageOrder.indexOf(b.stage));
-const done = now.filter(i => i.stage === 'done');
+const active = now.filter(i => i.state !== 'done').sort(byActivity);
+const done = now.filter(i => i.state === 'done');
 const lastUpdated = now.map(i => i.updated).sort().at(-1);
 ---
 
 <Base title="Now" description="What Jamal Issa is working on right now." active="now">
   <div class="page-top"><div class="wrap grid">
-    <div class="kicker label">Now · updated {lastUpdated}</div>
+    <div class="kicker label">Now{lastUpdated && ` · updated ${formatDate(new Date(lastUpdated))}`}</div>
     <h1 class="display">What I'm working on<span class="dot">.</span></h1>
-    <p class="standfirst">Current projects outside the day job, from planning to done. Each bar shows how much of the project's checklist is complete.</p>
+    <p class="standfirst">Current projects outside the day job, from backlog to done. Each bar shows how far along the project is.</p>
   </div></div>
 
   <section class="section" aria-labelledby="in-progress"><div class="wrap grid">
-    <div class="section-label"><span class="num">01</span><h2 id="in-progress">In progress</h2></div>
+    <div class="section-label"><span class="num">01</span><h2 id="in-progress">On the go</h2></div>
     <div class="section-body"><NowList items={active} detailed /></div>
   </div></section>
 

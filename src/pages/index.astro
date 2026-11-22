@@ -3,12 +3,12 @@ import Base from '../layouts/Base.astro';
 import GlassBackground from '../components/GlassBackground.astro';
 import Ticker from '../components/Ticker.astro';
 import NowList from '../components/NowList.astro';
-import { now, stageOrder } from '../data/now';
+import { now, byActivity } from '../data/now';
 import { headline, employer, platforms, certifications, languages, links } from '../data/profile';
 import { getPosts, readingMinutes, formatDate } from '../lib/posts';
 
 const posts = (await getPosts()).slice(0, 3);
-const nowItems = [...now].sort((a, b) => stageOrder.indexOf(a.stage) - stageOrder.indexOf(b.stage)).slice(0, 4);
+const nowItems = [...now].sort(byActivity).slice(0, 4);
 ---
 
 <Base surface="dark" active="home">

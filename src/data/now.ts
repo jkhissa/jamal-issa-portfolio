@@ -1,25 +1,32 @@
 // What I'm working on: shown on the home page and /now.
-// Edit by hand for now; later this can be generated from the backlog board
-// (public items only).
+// Same states, labels and shape as the board's public feed (now.json), so the
+// board can replace this hand-written list without changing the components.
 
-export type Stage = 'backlog' | 'planning' | 'execution' | 'testing' | 'done';
+export const STATES = ['backlog', 'ready', 'progress', 'test', 'done'] as const;
+export type State = (typeof STATES)[number];
+
+export const STATE_LABELS: Record<State, string> = {
+  backlog: 'Backlog',
+  ready: 'Ready for work',
+  progress: 'In progress',
+  test: 'In test',
+  done: 'Done',
+};
 
 export interface NowItem {
   title: string;
-  stage: Stage;
-  progress: number; // 0–100
-  note?: string;
-  updated: string; // YYYY-MM-DD
+  state: State;
+  progress: number | null; // 0–100, or null when not tracked
+  updated: string; // ISO date
 }
 
 export const now: NowItem[] = [
-  { title: 'Site redesign & writing section', stage: 'execution', progress: 60, updated: '2026-11-22',
-    note: 'New design with a writing section, profile page and this Now page.' },
-  { title: 'Backlog board', stage: 'planning', progress: 15, updated: '2026-11-22',
-    note: 'A small self-hosted kanban board with stages and progress bars.' },
-  { title: 'Raspberry Pi storage server', stage: 'planning', progress: 25, updated: '2026-11-22',
-    note: 'Home storage and backups with mixed drive sizes.' },
-  { title: 'LinkedIn → site content refresh', stage: 'done', progress: 100, updated: '2026-11-22' },
+  { title: 'Backlog board', state: 'progress', progress: 40, updated: '2026-11-22' },
+  { title: 'Raspberry Pi storage server', state: 'backlog', progress: 25, updated: '2026-11-22' },
+  { title: 'Site redesign', state: 'done', progress: 100, updated: '2026-11-22' },
+  { title: 'LinkedIn → site content refresh', state: 'done', progress: 100, updated: '2026-11-22' },
 ];
 
-export const stageOrder: Stage[] = ['execution', 'testing', 'planning', 'backlog', 'done'];
+/** Most active first: what's being worked on, then what's next, then done. */
+export const displayOrder: State[] = ['progress', 'test', 'ready', 'backlog', 'done'];
+export const byActivity = (a: NowItem, b: NowItem) => displayOrder.indexOf(a.state) - displayOrder.indexOf(b.state);

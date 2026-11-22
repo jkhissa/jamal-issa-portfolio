@@ -22,11 +22,11 @@
   --code-bg: #f1efea;
   --track: rgba(20, 22, 30, .08);
 
-  /* Stage colours (text + bars) */
+  /* State colours (text + bars): same as the board */
   --st-backlog: #626670;
-  --st-planning: #3149b8;
-  --st-execution: #8f5300;
-  --st-testing: #6c35b3;
+  --st-ready: #3149b8;
+  --st-progress: #8f5300;
+  --st-test: #6c35b3;
   --st-done: #11704a;
 
   /* Header glass */
@@ -56,9 +56,9 @@
   --track: rgba(255, 255, 255, .08);
 
   --st-backlog: #a3a8b3;
-  --st-planning: #8fa8ff;
-  --st-execution: #ffb547;
-  --st-testing: #c79bff;
+  --st-ready: #8fa8ff;
+  --st-progress: #ffb547;
+  --st-test: #c79bff;
   --st-done: #5fd39a;
 
   --h-bg: rgba(20, 22, 30, .6);
