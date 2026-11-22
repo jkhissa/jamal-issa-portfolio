@@ -1,0 +1,101 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getPosts, readingMinutes, formatDate, type Post } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, next: posts[i + 1] ?? null }, // next = the older article
+  }));
+}
+
+const { post, next } = Astro.props as { post: Post; next: Post | null };
+const { Content, headings } = await render(post);
+const sections = headings.filter(h => h.depth === 2);
+---
+
+<Base title={post.data.title} description={post.data.description} active="writing" type="article">
+  <div class="progress" aria-hidden="true"></div>
+
+  <article>
+    <header class="page-top"><div class="wrap grid">
+      <div class="kicker label"><a href="/writing/">Writing</a> / {post.data.topic}</div>
+      <h1 class="display">{post.data.title}<span class="dot">.</span></h1>
+      <p class="standfirst">{post.data.description}</p>
+    </div></header>
+
+    <div class="wrap grid">
+      <aside class="meta-col">
+        <div class="meta">
+          <dl>
+            <div><dt>Published</dt><dd><time datetime={post.data.date.toISOString()}>{formatDate(post.data.date, 'long')}</time></dd></div>
+            <div><dt>Reading</dt><dd>{readingMinutes(post.body)} min</dd></div>
+            <div><dt>Topic</dt><dd>{post.data.topic}</dd></div>
+          </dl>
+          {sections.length > 1 && (
+            <nav class="toc" aria-label="On this page">
+              {sections.map((h, i) => (
+                <a href={`#${h.slug}`}><span>{String(i + 1).padStart(2, '0')}</span>{h.text}</a>
+              ))}
+            </nav>
+          )}
+        </div>
+      </aside>
+
+      <div class="prose body">
+        <Content />
+      </div>
+    </div>
+  </article>
+
+  {next && (
+    <div class="next"><div class="wrap grid">
+      <div class="label l">Next article</div>
+      <a href={`/writing/${next.id}/`}>{next.data.title} →</a>
+    </div></div>
+  )}
+</Base>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('.progress');
+  if (bar) {
+    const update = () => {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      bar.style.transform = `scaleX(${max > 0 ? h.scrollTop / max : 0})`;
+    };
+    addEventListener('scroll', update, { passive: true });
+    update();
+  }
+</script>
+
+<style>
+  .progress { position: fixed; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); transform: scaleX(0); transform-origin: 0 50%; z-index: 20; }
+
+  .meta-col { grid-column: 1 / 4; padding-top: 40px; }
+  .meta { position: sticky; top: 100px; }
+  dl { margin: 0; font: 13px/1.6 var(--font-mono); color: var(--text-3); }
+  dl div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-top: 1px solid var(--hair); }
+  dd { margin: 0; color: var(--text); font-weight: 500; text-align: right; }
+
+  .toc { display: flex; flex-direction: column; margin-top: 10px; padding-top: 12px; border-top: 1px solid var(--hair); }
+  .toc a { display: grid; grid-template-columns: 30px 1fr; align-items: baseline; padding: 6px 0; color: var(--text-2); text-decoration: none; font: 14.5px/1.4 var(--font-body); }
+  .toc a:hover { color: var(--text); }
+  .toc span { font: 500 12px var(--font-mono); color: var(--accent); }
+
+  .body { grid-column: 4 / 11; padding: 40px 0 90px; }
+
+  .next { border-top: 2px solid var(--rule); padding: 40px 0 70px; }
+  .next .l { grid-column: 1 / 4; }
+  .next a { grid-column: 4 / 11; color: var(--text); text-decoration: none; font: 800 clamp(26px, 3.2vw, 38px)/1.1 var(--font-display); letter-spacing: -.03em; }
+  .next a:hover { color: var(--accent); }
+
+  @media (max-width: 960px) {
+    .meta-col, .body, .next .l, .next a { grid-column: 1 / -1; }
+    .meta { position: static; }
+    .toc { display: none; }
+    .body { padding-top: 24px; }
+  }
+</style>

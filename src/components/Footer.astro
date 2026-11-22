@@ -1,7 +1,24 @@
 ---
+import { links } from '../data/profile';
 const year = new Date().getFullYear();
 ---
 
-<footer class="text-center py-8 text-sm opacity-50 border-t border-white/5">
-  <p>&copy; {year} Jamal Issa. All rights reserved.</p>
+<footer class="site-footer">
+  <div class="wrap row">
+    <span>© {year} Jamal Issa</span>
+    <span class="links">
+      <a href={links.linkedin} rel="me noopener" target="_blank">LinkedIn</a>
+      <a href={links.github} rel="me noopener" target="_blank">GitHub</a>
+      <a href="/rss.xml">RSS</a>
+    </span>
+  </div>
 </footer>
+
+<style>
+  .site-footer { border-top: 1px solid var(--hair); padding: 28px 0 40px; font: 13px var(--font-mono); color: var(--text-3); }
+  :global([data-surface='dark']) .site-footer { border-top-color: transparent; }
+  .row { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .links { display: flex; gap: 18px; }
+  a { color: var(--text-2); text-decoration: none; }
+  a:hover { color: var(--accent); }
+</style>

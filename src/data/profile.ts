@@ -1,7 +1,18 @@
----
-const jobs = [
+// Profile content: used by the home page and /profile.
+
+export interface Job {
+  date: string;
+  title: string;
+  companyName: string;
+  location: string;
+  bullets: string[];
+}
+
+export const headline = 'Senior Technical Business Analyst';
+export const employer = 'Condatis';
+
+export const jobs: Job[] = [
   {
-    company: 'condatis',
     date: 'Mar 2025 – Present',
     title: 'Senior Technical Business Analyst',
     companyName: 'Condatis',
@@ -16,7 +27,6 @@ const jobs = [
     ],
   },
   {
-    company: 'condatis',
     date: 'May 2023 – Mar 2025',
     title: 'Business Analyst',
     companyName: 'Condatis',
@@ -28,7 +38,6 @@ const jobs = [
     ],
   },
   {
-    company: 'avaloq',
     date: 'Jul 2022 – Apr 2023',
     title: 'Senior Business Analyst',
     companyName: 'Avaloq',
@@ -41,7 +50,6 @@ const jobs = [
     ],
   },
   {
-    company: 'avaloq',
     date: 'Jan 2020 – Jul 2022',
     title: 'Business Analyst',
     companyName: 'Avaloq',
@@ -53,7 +61,6 @@ const jobs = [
     ],
   },
   {
-    company: 'avaloq',
     date: 'Dec 2018 – Jan 2020',
     title: 'Technical Business Analyst',
     companyName: 'Avaloq',
@@ -63,7 +70,6 @@ const jobs = [
     ],
   },
   {
-    company: 'freelance',
     date: 'Nov 2017 – Sep 2018',
     title: 'Freelance IT & Business Support Consultant',
     companyName: 'Self-employed',
@@ -73,7 +79,6 @@ const jobs = [
     ],
   },
   {
-    company: 'socialcarealba',
     date: 'Jun 2014 – Oct 2017',
     title: 'IT Coordinator / Business Analyst',
     companyName: 'Social Care Alba',
@@ -86,7 +91,6 @@ const jobs = [
     ],
   },
   {
-    company: 'napier',
     date: 'Jan 2014 – Apr 2014',
     title: 'Student Analyst',
     companyName: 'Edinburgh Napier University',
@@ -96,7 +100,6 @@ const jobs = [
     ],
   },
   {
-    company: 'napier',
     date: 'Jun 2013 – Sep 2013',
     title: 'Intern Social Media Analyst',
     companyName: 'Edinburgh Napier University',
@@ -106,7 +109,6 @@ const jobs = [
     ],
   },
   {
-    company: 'sei',
     date: 'Oct 2010 – Aug 2012',
     title: 'Junior Business Process Analyst',
     companyName: 'Souccar for Electronic Industries (SEI)',
@@ -118,7 +120,6 @@ const jobs = [
     ],
   },
   {
-    company: 'syrian-trust',
     date: 'Jun 2010 – Sep 2010',
     title: 'Supervisor, Shabab Project',
     companyName: 'Syrian Trust for Development',
@@ -128,7 +129,6 @@ const jobs = [
     ],
   },
   {
-    company: 'scb',
     date: 'Jun 2009 – Sep 2009',
     title: 'Intern Researcher',
     companyName: 'Syrian Consulting Bureau for Development and Investment (SCB)',
@@ -137,37 +137,55 @@ const jobs = [
       'Supervised survey data collection and supported data processing for SCB research projects.',
     ],
   },
-];---
+];
 
-<section id="experience" class="py-28 px-8 flex items-center justify-center">
-  <div class="max-w-5xl w-full mx-auto">
-    <h2 class="font-heading text-4xl font-bold text-center text-accent mb-14">Experience</h2>
+export const platforms = [
+  'Azure AD B2C', 'Entra External ID', 'Entra ID Governance', 'Entra Verified ID',
+  'OAuth 2.0 / OIDC', 'REST APIs', 'GDPR', 'ISO 27001',
+];
 
-    <div class="relative max-w-3xl mx-auto">
-      <!-- Vertical line -->
-      <div class="absolute left-12 top-0 bottom-0 w-px bg-white/10"></div>
+export const skills = {
+  core: [
+    'Stakeholder Management', 'Customer Identity & Access Management',
+    'Requirements & Specification', 'Discovery Workshops',
+    'Solution Design', 'Agile Delivery',
+  ],
+  technical: [
+    'Azure AD B2C (Custom Policies / IEF)', 'Entra External ID',
+    'Entra ID Governance', 'Entra Verified ID',
+    'OAuth 2.0 / OpenID Connect', 'REST APIs',
+    'GDPR & ISO 27001', 'Visio',
+  ],
+};
 
-      {jobs.map(job => (
-        <div class="timeline-item relative pl-24 mb-10" data-company={job.company}>
-          <!-- Dot -->
-          <div class="absolute left-[44px] top-1 w-3.5 h-3.5 rounded-full bg-accent border-[3px] border-[#0a0a0a]"></div>
+export interface Cert { name: string; short: string; issuer: string; year: number }
 
-          <p class="text-sm text-accent mb-2">{job.date}</p>
+export const certifications: Cert[] = [
+  { name: 'Microsoft Certified: Security, Compliance, and Identity Fundamentals', short: 'SC-900', issuer: 'Microsoft', year: 2024 },
+  { name: 'Microsoft Certified: Azure AI Fundamentals', short: 'AI-900', issuer: 'Microsoft', year: 2026 },
+  { name: 'Microsoft Certified: Azure Fundamentals', short: 'AZ-900', issuer: 'Microsoft', year: 2023 },
+  { name: 'Professional Scrum Master™ I', short: 'PSM I', issuer: 'Scrum.org', year: 2023 },
+  { name: 'Professional Scrum™ with Kanban I', short: 'PSK I', issuer: 'Scrum.org', year: 2023 },
+  { name: 'Avaloq Certified Customisation Professional', short: 'ACCP', issuer: 'Avaloq', year: 2019 },
+  { name: 'Learn to Code in Python', short: 'Python', issuer: 'Boot.dev', year: 2025 },
+  { name: 'Learn Git', short: 'Git', issuer: 'Boot.dev', year: 2025 },
+  { name: 'Learn Linux', short: 'Linux', issuer: 'Boot.dev', year: 2025 },
+];
 
-          <div class="timeline-content bg-white/5 p-7 rounded-2xl border border-white/5 transition-all duration-300 hover:translate-x-2 hover:bg-white/[0.08]">
-            <h3 class="text-lg font-semibold mb-0.5">{job.title}</h3>
-            <h4 class="font-normal opacity-75 mb-0.5 text-sm">{job.companyName}</h4>
-            <p class="text-xs opacity-50 mb-3">{job.location}</p>
-            {job.bullets.length > 0 && (
-              <ul class="list-disc list-inside space-y-1.5 mt-3">
-                {job.bullets.map(bullet => (
-                  <li class="text-sm opacity-85">{bullet}</li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
+export const languages = [
+  { code: 'EN', name: 'English', level: 'Full professional' },
+  { code: 'AR', name: 'Arabic', level: 'Native' },
+  { code: 'RU', name: 'Russian', level: 'Native' },
+  { code: 'FR', name: 'French', level: 'Elementary' },
+];
+
+export const education = [
+  { degree: 'MSc Business Information Technology', school: 'Edinburgh Napier University', years: '2013 – 2014' },
+  { degree: 'BSc Management of Information Systems', school: 'Higher Institute of Business Administration', years: '2007 – 2012' },
+];
+
+export const links = {
+  email: 'mailto:jkhissa@gmail.com',
+  linkedin: 'https://www.linkedin.com/in/jissa90',
+  github: 'https://github.com/jkhissa',
+};

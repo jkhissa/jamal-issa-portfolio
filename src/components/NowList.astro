@@ -1,0 +1,51 @@
+---
+import type { NowItem } from '../data/now';
+
+interface Props {
+  items: NowItem[];
+  detailed?: boolean; // /now page shows notes and dates
+}
+const { items, detailed = false } = Astro.props;
+---
+
+<ul class:list={['now-list', { detailed }]}>
+  {items.map(item => (
+    <li>
+      <div class="row">
+        <span class="title">{item.title}</span>
+        <span class="stage" style={`--c: var(--st-${item.stage})`}>{item.stage}</span>
+      </div>
+      <div class="bar" role="progressbar" aria-label={`${item.title} progress`}
+           aria-valuenow={item.progress} aria-valuemin="0" aria-valuemax="100">
+        <i style={`width: ${item.progress}%; --c: var(--st-${item.stage})`}></i>
+      </div>
+      {detailed && (
+        <div class="meta">
+          {item.note && <p>{item.note}</p>}
+          <span class="label">{item.progress}% · updated {item.updated}</span>
+        </div>
+      )}
+    </li>
+  ))}
+</ul>
+
+<style>
+  .now-list { list-style: none; margin: 0; padding: 0; }
+  li { padding: 11px 0; border-top: 1px solid var(--track); }
+  li:first-child { border-top: 0; }
+  .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .title { font-weight: 500; font-size: 15.5px; }
+  .stage {
+    font: 500 11.5px var(--font-mono); padding: 3px 9px; border-radius: 99px; white-space: nowrap;
+    color: var(--c); border: 1px solid currentColor;
+  }
+  .bar { height: 6px; background: var(--track); border-radius: 99px; overflow: hidden; }
+  .bar i { display: block; height: 100%; border-radius: 99px; background: var(--c); }
+
+  .detailed li { padding: 22px 0; border-top-color: var(--hair); }
+  .detailed li:first-child { border-top: 2px solid var(--rule); }
+  .detailed .title { font: 700 22px/1.25 var(--font-display); letter-spacing: -.02em; }
+  .detailed .bar { height: 8px; }
+  .meta { margin-top: 10px; }
+  .meta p { margin: 0 0 6px; color: var(--text-2); }
+</style>

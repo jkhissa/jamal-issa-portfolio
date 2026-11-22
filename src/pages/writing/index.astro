@@ -1,0 +1,48 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getPosts, readingMinutes, formatDate } from '../../lib/posts';
+
+const posts = await getPosts();
+---
+
+<Base title="Writing" description="Articles by Jamal Issa on identity and access management, business analysis and homelab projects." active="writing">
+  <div class="page-top"><div class="wrap grid">
+    <div class="kicker label">Writing</div>
+    <h1 class="display">Notes &amp; articles<span class="dot">.</span></h1>
+    <p class="standfirst">On identity and access management, business analysis, and the projects I build at home.</p>
+  </div></div>
+
+  <div class="wrap list">
+    {posts.length === 0 && <p class="empty">The first articles are on the way. <a href="/rss.xml">Subscribe via RSS</a> to hear when they're published.</p>}
+    {posts.map(post => (
+      <a class="post" href={`/writing/${post.id}/`}>
+        <span class="label">{post.data.topic}{post.data.draft && ' · draft'}</span>
+        <span class="body">
+          <span class="title">{post.data.title}</span>
+          <span class="desc">{post.data.description}</span>
+        </span>
+        <span class="label when">{formatDate(post.data.date)} · {readingMinutes(post.body)} min</span>
+      </a>
+    ))}
+  </div>
+</Base>
+
+<style>
+  .list { padding-top: 12px; padding-bottom: 80px; }
+  .empty { padding: 40px 0; font-size: 19px; color: var(--text-2); }
+  .post {
+    display: grid; grid-template-columns: 140px 1fr 150px; gap: 28px; align-items: baseline;
+    padding: 30px 0; border-bottom: 1px solid var(--hair); color: var(--text); text-decoration: none;
+    transition: padding .2s;
+  }
+  .title { display: block; font: 800 clamp(24px, 3vw, 34px)/1.1 var(--font-display); letter-spacing: -.03em; text-wrap: balance; }
+  .desc { display: block; margin-top: 10px; color: var(--text-2); max-width: 62ch; }
+  .when { text-align: right; }
+  .post:hover { padding-left: 12px; }
+  .post:hover .title { color: var(--accent); }
+  @media (prefers-reduced-motion: reduce) { .post { transition: none; } .post:hover { padding-left: 0; } }
+  @media (max-width: 760px) {
+    .post { grid-template-columns: 1fr; gap: 8px; }
+    .when { text-align: left; }
+  }
+</style>

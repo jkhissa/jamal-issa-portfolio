@@ -1,124 +1,234 @@
-@import "tailwindcss";
+/* ==========================================================================
+   Design tokens
+   - data-surface="dark"  → landing page (dark frosted glass)
+   - data-surface="light" → content pages (light, Swiss typography)
+   - data-theme="dark"    → reader-chosen dark mode on content pages
+   Contrast ratios noted are against the page background (WCAG 2.x).
+   ========================================================================== */
+:root {
+  --font-body: 'Inter Variable', system-ui, sans-serif;
+  --font-display: 'Inter Tight Variable', 'Inter Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
 
-@theme {
-  --color-accent: #646cff;
-  --color-accent-hover: #535bf2;
-  --font-sans: 'Outfit', sans-serif;
-  --font-heading: 'Space Grotesk', sans-serif;
+  /* Light content pages */
+  --page: #fbfaf7;
+  --text: #1b1c20;      /* 16.3:1 */
+  --text-2: #4a4d55;    /*  8.1:1 */
+  --text-3: #6b6f78;    /*  4.8:1, labels and meta only */
+  --rule: #1b1c20;
+  --hair: #e3e1db;
+  --accent: #c9301a;    /*  5.1:1 as link text */
+  --accent-soft: #fbe9e5;
+  --code-bg: #f1efea;
+  --track: rgba(20, 22, 30, .08);
+
+  /* Stage colours (text + bars) */
+  --st-backlog: #626670;
+  --st-planning: #3149b8;
+  --st-execution: #8f5300;
+  --st-testing: #6c35b3;
+  --st-done: #11704a;
+
+  /* Header glass */
+  --h-bg: rgba(255, 255, 255, .55);
+  --h-edge: rgba(20, 22, 30, .08);
+  --h-hi: rgba(255, 255, 255, .9);
+  --h-shadow: rgba(20, 22, 30, .08);
+  --h-text: #1b1c20;
+  --h-text-2: #4a4d55;
+  --h-hover: rgba(20, 22, 30, .05);
+  --h-on: rgba(20, 22, 30, .08);
+  --h-dot: #c9301a;
+
+  color-scheme: light;
 }
 
-html {
-  scroll-behavior: smooth;
+/* Dark: shared by the landing page and reader dark mode */
+[data-surface='dark'], [data-theme='dark'] {
+  --text: #ecedf0;
+  --text-2: #b9bdc6;
+  --text-3: #8d929d;
+  --rule: #ecedf0;
+  --hair: #262833;
+  --accent: #ff7a5c;
+  --accent-soft: #2a1814;
+  --code-bg: #1a1c23;
+  --track: rgba(255, 255, 255, .08);
+
+  --st-backlog: #a3a8b3;
+  --st-planning: #8fa8ff;
+  --st-execution: #ffb547;
+  --st-testing: #c79bff;
+  --st-done: #5fd39a;
+
+  --h-bg: rgba(20, 22, 30, .6);
+  --h-edge: rgba(255, 255, 255, .12);
+  --h-hi: rgba(255, 255, 255, .14);
+  --h-shadow: rgba(0, 0, 0, .3);
+  --h-text: #f3f4f6;
+  --h-text-2: #c3c7d0;
+  --h-hover: rgba(255, 255, 255, .07);
+  --h-on: rgba(255, 255, 255, .12);
+  --h-dot: #ff6b4a;
+
+  color-scheme: dark;
+}
+[data-theme='dark'] { --page: #111217; }
+[data-surface='dark'] {
+  --page: #0b0c10;
+  --text: #f3f4f6;
+  --text-2: #c3c7d0;
+  --text-3: #9298a5;
+  --accent: #ff6b4a;
+  --glass: rgba(24, 26, 34, .58);
+  --glass-solid: rgba(18, 20, 27, .8);
+  --edge: rgba(255, 255, 255, .09);
+  --edge-top: rgba(255, 255, 255, .16);
+  --blur: 26px;
 }
 
-/* ── Parallax background ── */
-.parallax-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  background: radial-gradient(circle at center, #1a1a2e 0%, #000 100%);
+/* ==========================================================================
+   Base
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+/* Page colour lives on <html> only: a body background would paint over the
+   glass blobs and colour wash, which sit behind content at negative z-index. */
+html { background: var(--page); scroll-padding-top: 96px; transition: background-color .2s; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  color: var(--text);
+  font: 17px/1.65 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: color .2s;
+}
+main { flex: 1; }
+a { color: var(--accent); text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+img { max-width: 100%; height: auto; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+.mono { font-family: var(--font-mono); }
+.label {
+  font: 500 12.5px/1.4 var(--font-mono);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.skip {
+  position: absolute; left: 16px; top: -60px; z-index: 50;
+  background: var(--accent); color: #0b0c10; padding: 8px 14px; border-radius: 8px; font-weight: 600;
+}
+.skip:focus { top: 16px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ==========================================================================
+   Swiss layout (content pages)
+   ========================================================================== */
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+.grid { display: grid; grid-template-columns: repeat(12, 1fr); column-gap: 28px; }
+
+/* Soft colour wash at the top of light pages: gives the glass header
+   something to blur and echoes the landing page. Fades out before text. */
+.wash {
+  position: absolute; top: 0; left: 0; right: 0; height: 460px; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(40% 70% at 12% 0%, rgba(44, 63, 209, .22), transparent 70%),
+    radial-gradient(35% 60% at 55% 0%, rgba(106, 43, 216, .16), transparent 70%),
+    radial-gradient(30% 55% at 92% 5%, rgba(232, 52, 28, .16), transparent 70%);
+  -webkit-mask-image: linear-gradient(#000 35%, transparent);
+  mask-image: linear-gradient(#000 35%, transparent);
 }
 
-.floating-shape {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(60px);
-  opacity: 0.6;
-  animation: float 20s infinite ease-in-out alternate;
+.page-top { padding: 76px 0 36px; border-bottom: 2px solid var(--rule); }
+.kicker { grid-column: 1 / -1; margin-bottom: 22px; }
+.kicker a { color: var(--accent); text-decoration: none; }
+.display {
+  grid-column: 1 / 11;
+  margin: 0;
+  font: 900 clamp(40px, 6.4vw, 84px)/.98 var(--font-display);
+  letter-spacing: -.045em;
+  text-wrap: balance;
+}
+.display .dot { color: var(--accent); }
+.standfirst {
+  grid-column: 1 / 9;
+  margin: 30px 0 0;
+  font: 500 clamp(19px, 2vw, 23px)/1.45 var(--font-body);
+  letter-spacing: -.01em;
+  color: var(--text-2);
+  text-wrap: pretty;
 }
 
-.shape-1 {
-  width: 400px;
-  height: 400px;
-  background: #4a00e0;
-  top: -100px;
-  left: -100px;
+/* Numbered sections: label column (01 + title) and content column */
+.section { padding: 64px 0; border-bottom: 2px solid var(--rule); }
+.section:last-of-type { border-bottom: 0; }
+.section-label { grid-column: 1 / 4; }
+.section-label .num { display: block; font: 900 64px/.8 var(--font-display); letter-spacing: -.05em; color: var(--accent); }
+.section-label h2 { margin: 14px 0 0; font: 800 22px/1.2 var(--font-display); letter-spacing: -.01em; }
+.section-body { grid-column: 4 / 13; }
+
+.chip {
+  display: inline-block;
+  font: 500 13px/1.4 var(--font-mono);
+  padding: 4px 10px;
+  border-radius: 99px;
+  border: 1px solid var(--hair);
+  color: var(--text);
+  background: color-mix(in srgb, var(--page) 70%, var(--hair));
+}
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+@media (max-width: 960px) {
+  .wrap { padding: 0 22px; }
+  .display, .standfirst, .section-label, .section-body { grid-column: 1 / -1; }
+  .section-label { margin-bottom: 26px; }
+  .section-label .num { font-size: 48px; }
+  .page-top { padding-top: 56px; }
 }
 
-.shape-2 {
-  width: 300px;
-  height: 300px;
-  background: #8e2de2;
-  bottom: 10%;
-  right: -50px;
-  animation-delay: -5s;
+/* ==========================================================================
+   Article typography (applies to rendered Markdown)
+   ========================================================================== */
+.prose { font-size: 18.5px; line-height: 1.75; max-width: 68ch; counter-reset: sec; }
+.prose > :first-child { margin-top: 0; }
+.prose p { margin: 0 0 1.25em; text-wrap: pretty; }
+.prose h2 {
+  display: flex; gap: 16px; align-items: baseline;
+  margin: 2.2em 0 .7em; padding-top: 18px; border-top: 2px solid var(--rule);
+  font: 800 30px/1.15 var(--font-display); letter-spacing: -.025em;
 }
-
-.shape-3 {
-  width: 200px;
-  height: 200px;
-  background: #00b4db;
-  top: 40%;
-  left: 30%;
-  animation-delay: -10s;
+.prose h2::before {
+  counter-increment: sec;
+  content: counter(sec, decimal-leading-zero);
+  font: 900 30px var(--font-display);
+  color: var(--accent);
 }
-
-.stars {
-  position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(2px 2px at 20px 30px, #eee, transparent),
-    radial-gradient(2px 2px at 40px 70px, #fff, transparent),
-    radial-gradient(2px 2px at 50px 160px, #ddd, transparent),
-    radial-gradient(2px 2px at 90px 40px, #fff, transparent),
-    radial-gradient(2px 2px at 130px 80px, #fff, transparent);
-  background-repeat: repeat;
-  background-size: 200px 200px;
-  opacity: 0.3;
-  animation: twinkle 5s infinite alternate;
+.prose h3 { margin: 1.8em 0 .5em; font: 700 21px/1.3 var(--font-display); letter-spacing: -.015em; }
+.prose ul, .prose ol { padding-left: 1.2em; margin: 0 0 1.25em; }
+.prose li { margin-bottom: .45em; }
+.prose li::marker { color: var(--accent); }
+.prose strong { font-weight: 650; }
+.prose hr { border: 0; border-top: 1px solid var(--hair); margin: 2.5em 0; }
+.prose code { font: .86em var(--font-mono); background: var(--code-bg); padding: .12em .4em; border-radius: 5px; }
+.prose pre {
+  background: #15161b !important; color: #e4e6eb;
+  border-radius: 12px; padding: 20px 22px; overflow-x: auto;
+  font: 14.5px/1.7 var(--font-mono); margin: 0 0 1.5em;
 }
-
-@keyframes float {
-  0%   { transform: translate(0, 0) rotate(0deg); }
-  100% { transform: translate(30px, 50px) rotate(10deg); }
+.prose pre code { background: none; padding: 0; font-size: inherit; }
+.prose blockquote {
+  margin: 1.6em 0; padding: 0 0 0 22px; border-left: 4px solid var(--accent);
+  font: 700 clamp(22px, 2.4vw, 27px)/1.3 var(--font-display); letter-spacing: -.02em;
 }
-
-@keyframes twinkle {
-  0%   { opacity: 0.3; }
-  100% { opacity: 0.5; }
+.prose blockquote p { margin: 0; }
+.prose table { width: 100%; border-collapse: collapse; font-size: 16px; margin: 0 0 1.5em; display: block; overflow-x: auto; }
+.prose th {
+  text-align: left; font: 500 12px var(--font-mono); text-transform: uppercase; letter-spacing: .05em;
+  color: var(--text-3); border-bottom: 2px solid var(--rule); padding: 8px 14px 8px 0;
 }
-
-
-/* ── Scroll fade-in ── */
-.fade-in-section {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.fade-in-section.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ── Timeline company logo watermark ── */
-.timeline-content {
-  position: relative;
-  overflow: hidden;
-  z-index: 1;
-}
-
-.timeline-content::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 60%;
-  height: 60%;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  opacity: 0.15;
-  z-index: -1;
-  pointer-events: none;
-}
-
-.timeline-item[data-company="condatis"] .timeline-content::after {
-  background-image: url('/images/condatis.png');
-}
-
-.timeline-item[data-company="avaloq"] .timeline-content::after {
-  background-image: url('/images/avaloq.png');
-}
+.prose td { border-bottom: 1px solid var(--hair); padding: 10px 14px 10px 0; vertical-align: top; }
+.prose img { border-radius: 10px; }
+@media (max-width: 960px) { .prose { font-size: 17.5px; } .prose h2, .prose h2::before { font-size: 26px; } }

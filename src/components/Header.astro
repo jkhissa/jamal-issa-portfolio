@@ -1,0 +1,83 @@
+---
+interface Props {
+  active?: 'home' | 'writing' | 'profile' | 'now';
+  showToggle?: boolean;
+}
+const { active, showToggle = false } = Astro.props;
+
+const items = [
+  { key: 'home', label: 'Home', href: '/' },
+  { key: 'writing', label: 'Writing', href: '/writing/' },
+  { key: 'profile', label: 'Profile', href: '/profile/' },
+  { key: 'now', label: 'Now', href: '/now/' },
+] as const;
+---
+
+<header class="site-header">
+  <div class="bar">
+    <a class="logo" href="/" aria-label="Jamal Issa — home">Jamal Issa<b>.</b></a>
+    <nav aria-label="Main">
+      {items.map(item => (
+        <a href={item.href} class:list={{ on: active === item.key }} aria-current={active === item.key ? 'page' : undefined}>
+          {item.label}
+        </a>
+      ))}
+      {showToggle && (
+        <button class="toggle" type="button" aria-label="Toggle dark mode" aria-pressed="false">
+          <svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg>
+        </button>
+      )}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.site-header .toggle');
+  if (btn) {
+    const root = document.documentElement;
+    const sync = () => btn.setAttribute('aria-pressed', String(root.dataset.theme === 'dark'));
+    sync();
+    btn.addEventListener('click', () => {
+      const dark = root.dataset.theme !== 'dark';
+      if (dark) root.dataset.theme = 'dark'; else delete root.dataset.theme;
+      try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch {}
+      sync();
+    });
+  }
+</script>
+
+<style>
+  .site-header { position: sticky; top: 14px; z-index: 10; max-width: 1200px; width: 100%; margin: 14px auto 0; padding: 0 24px; }
+  .bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    height: 58px; padding: 0 10px 0 20px; border-radius: 16px;
+    color: var(--h-text); background: var(--h-bg);
+    border: 1px solid var(--h-edge);
+    box-shadow: inset 0 1px 0 var(--h-hi), 0 12px 30px var(--h-shadow);
+    -webkit-backdrop-filter: blur(22px) saturate(170%);
+    backdrop-filter: blur(22px) saturate(170%);
+    transition: background-color .2s;
+  }
+  .logo { font: 800 18px var(--font-display); letter-spacing: -.02em; color: inherit; text-decoration: none; white-space: nowrap; }
+  .logo b { color: var(--h-dot); }
+  nav { display: flex; gap: 2px; align-items: center; }
+  nav a { padding: 8px 14px; border-radius: 10px; font: 500 15px var(--font-body); color: var(--h-text-2); text-decoration: none; }
+  nav a:hover { color: var(--h-text); background: var(--h-hover); }
+  nav a.on { color: var(--h-text); background: var(--h-on); }
+  .toggle {
+    margin-left: 6px; width: 36px; height: 36px; border-radius: 10px;
+    border: 1px solid var(--h-edge); background: none; color: var(--h-text-2);
+    cursor: pointer; display: grid; place-items: center;
+  }
+  .toggle:hover { color: var(--h-text); background: var(--h-hover); }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .bar { background: var(--page); }
+  }
+  @media (max-width: 620px) {
+    .site-header { padding: 0 12px; }
+    .bar { padding: 0 6px 0 14px; }
+    .logo { font-size: 16px; }
+    nav a { padding: 8px 8px; font-size: 14px; }
+    .toggle { margin-left: 2px; width: 32px; }
+  }
+</style>

@@ -1,8 +1,13 @@
-import { defineConfig } from 'astro/config';
-import tailwindcss from '@tailwindcss/vite';
+import { defineConfig, passthroughImageService } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  vite: {
-    plugins: [tailwindcss()],
+  site: 'https://issa-tech.com',
+  integrations: [sitemap()],
+  // No image processing needed: skips the native `sharp` dependency,
+  // which isn't reliably installed in clean (CI) environments.
+  image: { service: passthroughImageService() },
+  markdown: {
+    shikiConfig: { theme: 'github-dark-dimmed' },
   },
 });
